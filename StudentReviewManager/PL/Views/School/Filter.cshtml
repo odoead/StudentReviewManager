@@ -1,0 +1,24 @@
+﻿@model StudentReviewManager.PL.VM.School.FilterSchoolsViewModel
+@using (Html.BeginForm("Filter", "School", FormMethod.Get))
+{
+    <div class="form-group">
+        <label for="CityId">City</label>
+        <select class="form-control" id="CityId" name="CityId">
+            <option value="">All</option>
+            @foreach (var city in Model.Cities)
+            {
+                <option value="@city.Id">@city.Name</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="CourseIds">Courses</label>
+        <select multiple class="form-control" id="CourseIds" name="CourseIds">
+            @foreach (var course in Model.Courses)
+            {
+                <option value="@course.Id">@course.Name</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+}

@@ -1,0 +1,53 @@
+﻿@model SearchViewModel
+@{
+    ViewData["Title"] = "Search Results";
+}
+<h1>Search Results for "@Model.SearchQuery"</h1>
+<h2>Schools</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>City</th>
+            <th>Average Rating</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var school in Model.Schools)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => school.Name)</td>
+                <td>@Html.DisplayFor(modelItem => school.Description)</td>
+                <td>@Html.DisplayFor(modelItem => school.City.Name)</td>
+                <td>Average Rating Calculation Here</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<h2>Courses</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Specialty</th>
+            <th>Degree</th>
+            <th>School</th>
+            <th>Average Rating</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var course in Model.Courses)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => course.Name)</td>
+                <td>@Html.DisplayFor(modelItem => course.Description)</td>
+                <td>@Html.DisplayFor(modelItem => course.Specialty.Name)</td>
+                <td>@Html.DisplayFor(modelItem => course.Degree.Name)</td>
+                <td>@Html.DisplayFor(modelItem => course.School.Name)</td>
+                <td>Average Rating Calculation Here</td>
+            </tr>
+        }
+    </tbody>
+</table>

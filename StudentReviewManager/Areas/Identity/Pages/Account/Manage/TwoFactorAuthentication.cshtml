@@ -1,0 +1,67 @@
+﻿@page
+@using Microsoft.AspNetCore.Http.Features
+@modelTwoFactorAuthenticationModel
+@{
+ViewData["Title"]="Two-factorauthentication(2FA)";
+ViewData["ActivePage"]=ManageNavPages.TwoFactorAuthentication;
+}
+<partialname="_StatusMessage"for="StatusMessage"/>
+<h3>@ViewData["Title"]</h3>
+@{
+var consentFeature=HttpContext.Features.Get<ITrackingConsentFeature>();
+@if(consentFeature?.CanTrack??true)
+{
+@if(Model.Is2faEnabled)
+{
+if(Model.RecoveryCodesLeft==0)
+{
+<divclass ="alertalert-danger">
+<strong>Youhavenorecoverycodesleft.</strong>
+<p>Youmust<aasp-page="./GenerateRecoveryCodes">generateanewsetofrecoverycodes</a>beforeyoucanloginwitharecoverycode.</p>
+</div>
+}
+elseif(Model.RecoveryCodesLeft==1)
+{
+<divclass ="alertalert-danger">
+<strong>Youhave1recoverycodeleft.</strong>
+<p>Youcan<aasp-page="./GenerateRecoveryCodes">generateanewsetofrecoverycodes</a>.</p>
+</div>
+}
+elseif(Model.RecoveryCodesLeft<=3)
+{
+<divclass ="alertalert-warning">
+<strong>Youhave@Model.RecoveryCodesLeftrecoverycodesleft.</strong>
+<p>Youshould<aasp-page="./GenerateRecoveryCodes">generateanewsetofrecoverycodes</a>.</p>
+</div>
+}
+if(Model.IsMachineRemembered)
+{
+<formmethod="post"style="display:inline-block">
+<buttontype="submit"class ="btnbtn-primary">Forgetthisbrowser</button>
+</form>
+}
+<aasp-page="./Disable2fa"class ="btnbtn-primary">Disable2FA</a>
+<aasp-page="./GenerateRecoveryCodes"class ="btnbtn-primary">Resetrecoverycodes</a>
+}
+<h4>Authenticatorapp</h4>
+@if(!Model.HasAuthenticator)
+{
+<aid="enable-authenticator"asp-page="./EnableAuthenticator"class ="btnbtn-primary">Addauthenticatorapp</a>
+}
+else
+{
+<aid="enable-authenticator"asp-page="./EnableAuthenticator"class ="btnbtn-primary">Setupauthenticatorapp</a>
+<aid="reset-authenticator"asp-page="./ResetAuthenticator"class ="btnbtn-primary">Resetauthenticatorapp</a>
+}
+}
+else
+{
+<divclass ="alertalert-danger">
+<strong>Privacyandcookiepolicyhavenotbeenaccepted.</strong>
+<p>Youmustacceptthepolicybeforeyoucanenabletwofactorauthentication.</p>
+</div>
+}
+}
+@sectionScripts{
+<partialname="_ValidationScriptsPartial"/>
+}

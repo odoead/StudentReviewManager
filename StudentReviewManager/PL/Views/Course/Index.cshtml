@@ -1,0 +1,39 @@
+﻿@model IEnumerable<StudentReviewManager.DAL.Models.Course>
+@{
+    ViewData["Title"] = "Courses";
+}
+<h1>Courses</h1>
+<p>
+    <a class="btn btn-primary" href="/Course/Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Specialty</th>
+            <th>Degree</th>
+            <th>School</th>
+            <th>Average Rating</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                <td>@Html.DisplayFor(modelItem => item.Specialty.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Degree.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.School.Name)</td>
+                <td>Average Rating Calculation Here</td>
+                <td>
+                    <a class="btn btn-secondary" href="/Course/Edit/@item.Id">Edit</a> |
+                    <a class="btn btn-danger" href="/Course/Delete/@item.Id">Delete</a> |
+                    <a class="btn btn-info" href="/Course/Details/@item.Id">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

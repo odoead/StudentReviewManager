@@ -1,0 +1,35 @@
+﻿@model StudentReviewManager.PL.VM.Course.FilterCoursesVM
+@using (Html.BeginForm("Filter", "Course", FormMethod.Get))
+{
+    <div class="form-group">
+        <label for="SpecialtyId">Specialty</label>
+        <select class="form-control" id="SpecialtyId" name="SpecialtyId">
+            <option value="">All</option>
+            @foreach (var specialty in Model.Specialties)
+            {
+                <option value="@specialty.Id">@specialty.Name</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="SchoolId">School</label>
+        <select class="form-control" id="SchoolId" name="SchoolId">
+            <option value="">All</option>
+            @foreach (var school in Model.Schools)
+            {
+                <option value="@school.Id">@school.Name</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="DegreeId">Degree</label>
+        <select class="form-control" id="DegreeId" name="DegreeId">
+            <option value="">All</option>
+            @foreach (var degree in Model.Degrees)
+            {
+                <option value="@degree.Id">@degree.Name</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+}
