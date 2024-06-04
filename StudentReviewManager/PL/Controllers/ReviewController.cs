@@ -24,15 +24,6 @@ namespace StudentReviewManager.PL.Controllers
             this.userManager = userManager;
         }
 
-        public async Task<IActionResult> Create(int id)
-        {
-            var course = await courseService.GetById(id);
-            var school = schoolService.GetById(course.School.Id);
-            var user = await userManager.FindByNameAsync(User.Identity.Name);
-            // var  model =
-            return View();
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitReview(ReviewVM model)

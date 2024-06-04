@@ -5,7 +5,7 @@ namespace  MyLeaveManagement.Mappings
     {
         public  Maps()
         {
-CreateMap
+
         }
     }
 }

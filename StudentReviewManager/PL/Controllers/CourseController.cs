@@ -94,7 +94,7 @@ namespace StudentReviewManager.PL.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Filter(int? specialtyId, int? schoolId, int? degreeId)
+        /*public async Task<IActionResult> Filter(int? specialtyId, int? schoolId, int? degreeId)
         {
             var courses = await courseService.FilterCoursesasync(specialtyId, schoolId, degreeId);
             var viewModel = new FilterCoursesVM
@@ -107,7 +107,7 @@ namespace StudentReviewManager.PL.Controllers
                 //Degrees = ,
             };
             return View(viewModel);
-        }
+        }*/
 
         [HttpPost]
         [ValidateAntiForgeryToken]
