@@ -1,12 +1,12 @@
 ﻿@page
-@modelShowRecoveryCodesModel
+@model ShowRecoveryCodesModel
 @{
 ViewData["Title"]="Recoverycodes";
 ViewData["ActivePage"]="TwoFactorAuthentication";
 }
 <partialname="_StatusMessage"for="StatusMessage"/>
 <h3>@ViewData["Title"]</h3>
-<divclass ="alertalert-warning"role="alert">
+<div class ="alertalert-warning"role="alert">
 <p>
 <strong>Putthesecodesinasafeplace.</strong>
 </p>
@@ -14,11 +14,11 @@ ViewData["ActivePage"]="TwoFactorAuthentication";
 Ifyouloseyourdeviceanddon'thavetherecoverycodesyouwillloseaccesstoyouraccount.
 </p>
 </div>
-<divclass ="row">
-<divclass ="col-md-12">
+<div class ="row">
+<div class ="col-md-12">
 @for(var row=0;row<Model.RecoveryCodes.Length;row+=2)
 {
-<codeclass ="recovery-code">@Model.RecoveryCodes[row]</code><text>&nbsp;</text><codeclass ="recovery-code">@Model.RecoveryCodes[row+1]</code><br/>
+<code class ="recovery-code">@Model.RecoveryCodes Codes[row]</code><text>&nbsp;</text><code class ="recovery-code">@Model.RecoveryCodes[row+1]</code><br/>
 }
 </div>
 </div>

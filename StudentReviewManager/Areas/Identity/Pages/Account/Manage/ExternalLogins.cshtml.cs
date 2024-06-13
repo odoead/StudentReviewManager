@@ -1,11 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable  disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -58,19 +53,19 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnGetasync()
         {
-            var user = await _userManager.GetUserasync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
-            CurrentLogins = await _userManager.GetLoginsasync(user);
-            OtherLogins = (await _signInManager.GetExternalAuthenticationSchemesasync())
+            CurrentLogins = await _userManager.GetLoginsAsync(user);
+            OtherLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync())
                 .Where(auth => CurrentLogins.All(ul => auth.Name != ul.LoginProvider))
                 .ToList();
             string passwordHash = null;
             if (_userStore is IUserPasswordStore<User> userPasswordStore)
             {
-                passwordHash = await userPasswordStore.GetPasswordHashasync(
+                passwordHash = await userPasswordStore.GetPasswordHashAsync(
                     user,
                     HttpContext.RequestAborted
                 );
@@ -84,18 +79,18 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
             string providerKey
         )
         {
-            var user = await _userManager.GetUserasync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
-            var result = await _userManager.RemoveLoginasync(user, loginProvider, providerKey);
+            var result = await _userManager.RemoveLoginAsync(user, loginProvider, providerKey);
             if (!result.Succeeded)
             {
                 StatusMessage = "The external login was not removed.";
                 return RedirectToPage();
             }
-            await _signInManager.RefreshSignInasync(user);
+            await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "The external login was removed.";
             return RedirectToPage();
         }
@@ -103,7 +98,7 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnPostLinkLoginasync(string provider)
         {
             // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.SignOutasync(IdentityConstants.ExternalScheme);
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
             // Request a redirect to the external login provider to link a login for the current user
             var redirectUrl = Url.Page("./ExternalLogins", pageHandler: "LinkLoginCallback");
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(
@@ -116,20 +111,20 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnGetLinkLoginCallbackasync()
         {
-            var user = await _userManager.GetUserasync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
-            var userId = await _userManager.GetUserIdasync(user);
-            var info = await _signInManager.GetExternalLoginInfoasync(userId);
+            var userId = await _userManager.GetUserIdAsync(user);
+            var info = await _signInManager.GetExternalLoginInfoAsync(userId);
             if (info == null)
             {
                 throw new InvalidOperationException(
                     $"Unexpected error occurred loading external login info."
                 );
             }
-            var result = await _userManager.AddLoginasync(user, info);
+            var result = await _userManager.AddLoginAsync(user, info);
             if (!result.Succeeded)
             {
                 StatusMessage =
@@ -137,7 +132,7 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
                 return RedirectToPage();
             }
             // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.SignOutasync(IdentityConstants.ExternalScheme);
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
             StatusMessage = "The external login was added.";
             return RedirectToPage();
         }

@@ -1,0 +1,30 @@
+﻿@model StudentReviewManager.PL.VM.Course.CourseEditFillVM
+@{
+    ViewData["Title"] = "Edit Course";
+}
+<h2>Edit Course</h2>
+<form asp-action="Edit" method="post">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <input asp-for="Description" class="form-control" />
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SpecialtyId">Specialty</label>
+        <select asp-for="SpecialtyId" class="form-control" asp-items="@(new SelectList(Model.Specialties, "Id", "Name"))"></select>
+        <span asp-validation-for="SpecialtyId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DegreeId">Degree</label>
+        <select asp-for="DegreeId" class="form-control" asp-items="@(new SelectList(Model.Degrees, "Id", "Name"))"></select>
+        <span asp-validation-for="DegreeId" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="ID" />
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

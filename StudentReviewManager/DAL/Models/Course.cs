@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StudentReviewManager.DAL.Models
 {
+    [Table("Courses")]
     public class Course
     {
         [Key]
@@ -11,8 +12,8 @@ namespace StudentReviewManager.DAL.Models
         public string Name { get; set; }
 
         [ForeignKey("SchoolId")]
-        public School School { get; set; }
-        public int SchoolId { get; set; }
+        public School? School { get; set; }
+        public int? SchoolId { get; set; }
         public ICollection<Review> Reviews { get; set; }
 
         [ForeignKey("DegreeId")]

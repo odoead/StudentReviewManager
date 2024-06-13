@@ -1,14 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable  disable
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StudentReviewManager.DAL.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
 {
@@ -60,15 +57,15 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
 
         private async Task Loadasync(User user)
         {
-            var userName = await _userManager.GetUserNameasync(user);
-            var phoneNumber = await _userManager.GetPhoneNumberasync(user);
+            var userName = await _userManager.GetUserNameAsync(user);
+            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             Username = userName;
             Input = new InputModel { PhoneNumber = phoneNumber };
         }
 
         public async Task<IActionResult> OnGetasync()
         {
-            var user = await _userManager.GetUserasync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -79,7 +76,7 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostasync()
         {
-            var user = await _userManager.GetUserasync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -89,10 +86,10 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
                 await Loadasync(user);
                 return Page();
             }
-            var phoneNumber = await _userManager.GetPhoneNumberasync(user);
+            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)
             {
-                var setPhoneResult = await _userManager.SetPhoneNumberasync(
+                var setPhoneResult = await _userManager.SetPhoneNumberAsync(
                     user,
                     Input.PhoneNumber
                 );
@@ -102,7 +99,7 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
-            await _signInManager.RefreshSignInasync(user);
+            await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
         }

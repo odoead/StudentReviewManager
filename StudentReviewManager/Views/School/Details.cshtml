@@ -1,10 +1,13 @@
-﻿@model StudentReviewManager.DAL.Models.School
+﻿@model StudentReviewManager.PL.VM.School.SchoolVM
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
 @{
     ViewData["Title"] = "School Details";
 }
 <h1>@Model.Name</h1>
 <p>@Model.Description</p>
-<p>City: @Model.City.Name</p>
+<p>City: @Model.CityName</p>
+<p>Rating: @Model.AverageRating</p>
 <h2>Reviews</h2>
 <table class="table">
     <thead>
@@ -45,8 +48,8 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => course.Name)</td>
                 <td>@Html.DisplayFor(modelItem => course.Description)</td>
-                <td>@Html.DisplayFor(modelItem => course.Specialty.Name)</td>
-                <td>@Html.DisplayFor(modelItem => course.Degree.Name)</td>
+                <td>@Html.DisplayFor(modelItem => course.SpecialtyName)</td>
+                <td>@Html.DisplayFor(modelItem => course.DegreeName)</td>
             </tr>
         }
     </tbody>
@@ -67,5 +70,6 @@
         <input type="number" class="form-control" id="Rating" name="Rating" min="0" max="5" required>
     </div>
     <input type="hidden" name="SchoolId" value="@Model.Id" />
+    <input type="hidden" name="IsAuthorized" value="@(SignInManager.IsSignedIn(User) ? "true" : "false")" />
     <button type="submit" class="btn btn-primary">Submit</button>
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StudentReviewManager.DAL.Models;
 
-namespace MyLeaveManagement.Areas.Identity.Pages.Account
+namespace StudentReviewManager.Areas.Identity.Pages.Account
 {
     public class LogoutModel : PageModel
     {

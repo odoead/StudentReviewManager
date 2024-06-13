@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StudentReviewManager.DAL.Models
 {
+    [Table("Degrees")]
     public class Degree
     {
         [Key]

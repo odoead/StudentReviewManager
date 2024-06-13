@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using StudentReviewManager.DAL.Models;
+﻿using StudentReviewManager.DAL.Models;
 
 namespace StudentReviewManager.BLL.Services.interfaces
 {

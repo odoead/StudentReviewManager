@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using StudentReviewManager.DAL.Models;
+﻿using StudentReviewManager.DAL.Models;
 
 namespace StudentReviewManager.BLL.Services.interfaces
 {

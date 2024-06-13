@@ -1,4 +1,7 @@
-﻿@model IEnumerable<StudentReviewManager.DAL.Models.Course>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<StudentReviewManager.DAL.Models.User> SignInManager
+@inject UserManager<StudentReviewManager.DAL.Models.User> UserManager
+@model IEnumerable<StudentReviewManager.PL.VM.Course.CourseVM>
 @{
     ViewData["Title"] = "Courses";
 }
@@ -24,13 +27,16 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
                 <td>@Html.DisplayFor(modelItem => item.Description)</td>
-                <td>@Html.DisplayFor(modelItem => item.Specialty.Name)</td>
-                <td>@Html.DisplayFor(modelItem => item.Degree.Name)</td>
-                <td>@Html.DisplayFor(modelItem => item.School.Name)</td>
-                <td>Average Rating Calculation Here</td>
+                <td>@Html.DisplayFor(modelItem => item.SpecialtyName)</td>
+                <td>@Html.DisplayFor(modelItem => item.DegreeName)</td>
+                <td>@Html.DisplayFor(modelItem => item.SchoolName)</td>
+                <td>@Html.DisplayFor(modelItem => item.AverageRating)</td>
                 <td>
-                    <a class="btn btn-secondary" href="/Course/Edit/@item.Id">Edit</a> |
-                    <a class="btn btn-danger" href="/Course/Delete/@item.Id">Delete</a> |
+                    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                    <a class="btn btn-secondary" href="/Course/Edit/@item.Id">Edit</a>
+                    <a class="btn btn-danger" href="/Course/Delete/@item.Id">Delete</a>
+                    }
                     <a class="btn btn-info" href="/Course/Details/@item.Id">Details</a>
                 </td>
             </tr>

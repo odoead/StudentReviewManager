@@ -1,17 +1,15 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable  disable
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using StudentReviewManager.DAL.Models;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using System.Text.Encodings.Web;
 
 namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
 {
@@ -76,15 +74,15 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
 
         private async Task Loadasync(User user)
         {
-            var email = await _userManager.GetEmailasync(user);
+            var email = await _userManager.GetEmailAsync(user);
             Email = email;
             Input = new InputModel { NewEmail = email, };
-            IsEmailConfirmed = await _userManager.IsEmailConfirmedasync(user);
+            IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
         }
 
         public async Task<IActionResult> OnGetasync()
         {
-            var user = await _userManager.GetUserasync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -95,7 +93,7 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostChangeEmailasync()
         {
-            var user = await _userManager.GetUserasync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -105,11 +103,11 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
                 await Loadasync(user);
                 return Page();
             }
-            var email = await _userManager.GetEmailasync(user);
+            var email = await _userManager.GetEmailAsync(user);
             if (Input.NewEmail != email)
             {
-                var userId = await _userManager.GetUserIdasync(user);
-                var code = await _userManager.GenerateChangeEmailTokenasync(user, Input.NewEmail);
+                var userId = await _userManager.GetUserIdAsync(user);
+                var code = await _userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 var callbackUrl = Url.Page(
                     "/Account/ConfirmEmailChange",
@@ -123,7 +121,7 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
                     },
                     protocol: Request.Scheme
                 );
-                await _emailSender.SendEmailasync(
+                await _emailSender.SendEmailAsync(
                     Input.NewEmail,
                     "Confirm your email",
                     $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>."
@@ -137,7 +135,7 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostSendVerificationEmailasync()
         {
-            var user = await _userManager.GetUserasync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -147,9 +145,9 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
                 await Loadasync(user);
                 return Page();
             }
-            var userId = await _userManager.GetUserIdasync(user);
-            var email = await _userManager.GetEmailasync(user);
-            var code = await _userManager.GenerateEmailConfirmationTokenasync(user);
+            var userId = await _userManager.GetUserIdAsync(user);
+            var email = await _userManager.GetEmailAsync(user);
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",
@@ -162,7 +160,7 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
                 },
                 protocol: Request.Scheme
             );
-            await _emailSender.SendEmailasync(
+            await _emailSender.SendEmailAsync(
                 email,
                 "Confirm your email",
                 $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>."

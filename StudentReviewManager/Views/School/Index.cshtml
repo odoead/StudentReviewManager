@@ -1,4 +1,7 @@
-﻿@model IEnumerable<StudentReviewManager.DAL.Models.School>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<StudentReviewManager.DAL.Models.User> SignInManager
+@inject UserManager<StudentReviewManager.DAL.Models.User> UserManager
+@model IEnumerable<StudentReviewManager.PL.VM.School.SchoolVM>
 @{
     ViewData["Title"] = "Schools";
 }
@@ -22,11 +25,14 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
                 <td>@Html.DisplayFor(modelItem => item.Description)</td>
-                <td>@Html.DisplayFor(modelItem => item.City.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.CityName)</td>
                 <td>Average Rating Calculation Here</td>
                 <td>
-                    <a class="btn btn-secondary" href="/School/Edit/@item.Id">Edit</a> |
-                    <a class="btn btn-danger" href="/School/Delete/@item.Id">Delete</a> |
+                    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        <a class="btn btn-secondary" href="/School/Edit/@item.Id">Edit</a>
+                        <a class="btn btn-danger" href="/School/Delete/@item.Id">Delete</a>
+                    }
                     <a class="btn btn-info" href="/School/Details/@item.Id">Details</a>
                 </td>
             </tr>

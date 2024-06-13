@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StudentReviewManager.DAL.Models
 {
+    [Table("Schools")]
     public class School
     {
         [Key]

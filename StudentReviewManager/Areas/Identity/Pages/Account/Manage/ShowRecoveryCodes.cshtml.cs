@@ -1,10 +1,8 @@
 ﻿//Licensedtothe.NETFoundationunderoneormoreagreements.
 //The.NETFoundationlicensesthisfiletoyouundertheMITlicense.
 #nullable disable
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
 namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
 {

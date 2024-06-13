@@ -2,20 +2,22 @@
 using StudentReviewManager.BLL.Services.interfaces;
 using StudentReviewManager.DAL.Data;
 using StudentReviewManager.DAL.Models;
+using StudentReviewManager.PL.VM.School;
 
 namespace StudentReviewManager.BLL.Services.Realization
 {
-    public class SchoolService : ISchoolServ
+    public class SchoolService : ISchoolService
     {
         private readonly ApplicationDbContext dbcontext;
 
-        public SchoolService(ApplicationDbContext context)
+        public SchoolService(ApplicationDbContext context )
         {
             dbcontext = context;
         }
 
-        public async Task AddCourse(int id, Course course)
+        public async Task AddCourse(int id, int courseId)
         {
+            var course = dbcontext.Courses.FirstOrDefault(c => c.Id == courseId);
             course.SchoolId = id;
             dbcontext.Courses.Add(course);
             await dbcontext.SaveChangesAsync();
@@ -28,8 +30,14 @@ namespace StudentReviewManager.BLL.Services.Realization
             await dbcontext.SaveChangesAsync();
         }
 
-        public async Task Create(School school)
+        public async Task Create(CreateSchoolVM school)
         {
+            var school_ = new School
+            {
+                City = await dbcontext.Cities.FirstOrDefaultAsync(q => q.Id == school.CityId),
+                Name= school.Name,Description= school.Description,
+                Courses= await dbcontext.Courses.Where(q => school.CoursesIDs.Contains(q.Id)).ToListAsync(),
+            };
             dbcontext.Add(school);
             await dbcontext.SaveChangesAsync();
         }
@@ -56,6 +64,7 @@ namespace StudentReviewManager.BLL.Services.Realization
             return await dbcontext
                 .School.Where(c => c.Id == id)
                 .Include(c => c.Courses)
+                .Include(c => c.City)
                 .Include(c => c.Reviews)
                 .ThenInclude(rev => rev.User)
                 .FirstOrDefaultAsync();
@@ -67,17 +76,40 @@ namespace StudentReviewManager.BLL.Services.Realization
             return sch.Reviews.Count();
         }
 
-        public async Task RemoveCourse(int id, Course course)
+        public async Task RemoveCourse(int id, int courseId)
         {
+            var course = dbcontext.Courses.FirstOrDefault(c => c.Id == courseId);
             course.SchoolId = id;
             dbcontext.Courses.Add(course);
             await dbcontext.SaveChangesAsync();
         }
 
-        public async Task Update(School school)
+        public async Task Edit(SchoolEditFillVM school)
         {
-            dbcontext.Update(school);
+            var school_ = await GetById(school.ID);
+            if (school_ == null)
+            {
+                school_.Description = school.Description;
+                school_.Name = school.Name;
+                school_.City = await dbcontext.Cities.FirstOrDefaultAsync(q => q.Id == school.CityId);
+                school_.Courses = await dbcontext.Courses.Where(q=> school.CoursesIDs.Contains(q.Id)).ToListAsync();
+            }
+            dbcontext.School.Update(school_);
             await dbcontext.SaveChangesAsync();
+        }
+
+        public async Task<Double> GetAvgRating(int id)
+        {
+            var school = await dbcontext
+                .School.Where(c => c.Id == id)
+                .Include(c => c.Reviews)
+                .FirstOrDefaultAsync();
+            double AverageRatingg = 0;
+            if (school != null)
+            {
+                AverageRatingg = school.Reviews.Where(r => r.IsAuthorized).Average(r => r.Rating);
+            }
+            return AverageRatingg;
         }
 
         public async Task<IEnumerable<School>> FilterSchoolsasync(int? cityId, int[] courseIds)

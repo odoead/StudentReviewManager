@@ -1,7 +1,20 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "student review system start";
 }
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to Student Review System</h1>
+    <p class="lead">This site will help you to find different courses and schools</p>
+    <hr class="my-4">
+    <p>Main features of the app:</p>
+    <ul>
+        <li><strong>Explore Courses:</strong> Find courses curated by various schools. Get detailed information about each course.</li>
+        <li><strong>Discover Schools:</strong> Find information about different schools</li>
+        <li><strong>Write and Read Reviews:</strong> Share your experiences and discover other ones about courses and schools</li>
+        <li><strong>Search Functionality:</strong> You can use search on the upper bar to find courses and schools by their names </li>
+        <li><strong>Admin Management:</strong> Only futhorized admin can edit data</li>
+        <li><strong>User management:</strong> You can register and login. Then your reviews will be counted while calculating average ratings.</li>
+    </ul>
+    <a class="btn btn-primary btn-lg" href="@Url.Action("Index", "Course")" role="button">Get courses</a>
+    <a class="btn btn-secondary btn-lg" href="/School/Index" role="button">Get schools</a>
 </div>

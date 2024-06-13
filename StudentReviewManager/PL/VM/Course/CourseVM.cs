@@ -1,6 +1,4 @@
-﻿using StudentReviewManager.DAL.Models;
-using StudentReviewManager.PL.VM.Review;
-using E = StudentReviewManager.DAL.Models;
+﻿using E = StudentReviewManager.DAL.Models;
 
 namespace StudentReviewManager.PL.VM.Course
 {

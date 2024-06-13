@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StudentReviewManager.BLL.Services.interfaces;
-using StudentReviewManager.BLL.Services.Realization;
-using StudentReviewManager.PL.VM;
 using StudentReviewManager.PL.VM.Search;
 
 namespace StudentReviewManager.PL.Controllers
