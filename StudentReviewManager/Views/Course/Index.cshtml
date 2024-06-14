@@ -32,11 +32,11 @@
                 <td>@Html.DisplayFor(modelItem => item.SchoolName)</td>
                 <td>@Html.DisplayFor(modelItem => item.AverageRating)</td>
                 <td>
-                    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-                    {
+                    @*@if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {*@
                     <a class="btn btn-secondary" href="/Course/Edit/@item.Id">Edit</a>
                     <a class="btn btn-danger" href="/Course/Delete/@item.Id">Delete</a>
-                    }
+                    @*}*@
                     <a class="btn btn-info" href="/Course/Details/@item.Id">Details</a>
                 </td>
             </tr>

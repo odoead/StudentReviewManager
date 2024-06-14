@@ -26,7 +26,7 @@
                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
                 <td>@Html.DisplayFor(modelItem => item.Description)</td>
                 <td>@Html.DisplayFor(modelItem => item.CityName)</td>
-                <td>Average Rating Calculation Here</td>
+                <td>@Html.DisplayFor(modelItem => item.AverageRating)</td>
                 <td>
                     @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                     {

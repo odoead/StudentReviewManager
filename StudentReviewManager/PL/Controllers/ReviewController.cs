@@ -25,7 +25,7 @@ namespace StudentReviewManager.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubmitReview(ReviewVM model)
+        public async Task<ActionResult> SubmitReview(ReviewVM model)
         {
             if (!ModelState.IsValid)
             {
@@ -41,20 +41,24 @@ namespace StudentReviewManager.PL.Controllers
                 CreatedAt = DateTime.UtcNow,
                 IsAuthorized = isAuthorized,
                 UserId = user?.Id,
-                SchoolId = model.SchoolId,
-                CourseId = model.CourseId
+                SchoolId = model?.SchoolId,
+                CourseId = model?.CourseId
             };
             if (model.CourseId != 0)
             {
                 await courseService.AddReview(model.CourseId, review);
-                return RedirectToAction("Details", new { id = model.CourseId });
+                return RedirectToAction("Details", "Course", new { id = model.CourseId });
             }
             else if (model.SchoolId != 0)
             {
                await schoolService.AddReview(model.SchoolId, review);
-                return RedirectToAction("Details", new { id = model.SchoolId });
+                return RedirectToAction("Details", "School", new { id = model.SchoolId });
             }
-            return BadRequest(model);
+            else
+            {
+                // Handle the case where both CourseId and SchoolId are 0
+                return BadRequest("Invalid Course or School ID");
+            }
         }
     }
 }

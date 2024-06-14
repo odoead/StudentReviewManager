@@ -11,7 +11,6 @@ namespace StudentReviewManager.PL.Controllers
     public class SchoolController : Controller
     {
         private readonly ISchoolService schoolService;
-        private readonly IUserService userService;
         private readonly IConfiguration configuration;
         private readonly IReviewService reviewService;
         private readonly ICourseService courseService;
@@ -20,7 +19,6 @@ namespace StudentReviewManager.PL.Controllers
         public SchoolController(
             ISchoolService schoolService,
             IConfiguration configuration,
-            IUserService userService,
             IReviewService reviewService,
             ICourseService courseService,
             ApplicationDbContext dbContext
@@ -28,16 +26,15 @@ namespace StudentReviewManager.PL.Controllers
         {
             this.schoolService = schoolService;
             this.configuration = configuration;
-            this.userService = userService;
             this.reviewService = reviewService;
             this.courseService = courseService;
             this.dbcontext = dbContext;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<ActionResult> Index()
         {
             var schools = await schoolService.GetAll();
-            var schoolsVM = new List<SchoolVM>();
+            /*var schoolsVM = new List<SchoolVM>();
             foreach (var school in schools)
             {
                 List<CourseVM> coursesVM = new List<CourseVM> { };
@@ -64,18 +61,29 @@ namespace StudentReviewManager.PL.Controllers
                         AverageRating = await schoolService.GetAvgRating(school.Id),
                     }
                 );
+            }*/
+           var  schoolsVM= new List<SchoolVM>();
+            var Coursess = new List<CourseVM>();
+            Coursess.Add(new CourseVM { AverageRating = 3, DegreeName = "test", Description = "descr", Id = 1, Name = "ttt", SpecialtyName = "SpecialtyName", SchoolName = "school" });
+            schoolsVM.Add(new SchoolVM
+            {
+                AverageRating = 5,
+                CityName = "dnipro",
+               Courses=Coursess,Name="test",Id=55
             }
+            
+            );
             return View(schoolsVM);
         }
 
-        public async Task<IActionResult> Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
             var school = await schoolService.GetById(id);
             if (school == null)
             {
                 return NotFound();
             }
-            List<CourseVM> coursesVM = new List<CourseVM> { };
+            /*List<CourseVM> coursesVM = new List<CourseVM> { };
             foreach (var course in school.Courses)
             {
                 coursesVM.Add(
@@ -95,23 +103,19 @@ namespace StudentReviewManager.PL.Controllers
                 Name = school.Name,
                 Reviews = school.Reviews,
                 Courses = coursesVM
-            };
-            return View(schoolVM);
+            };*/
+            return View(school);
         }
 
-        public async Task<IActionResult> Create() 
+        public async Task<ActionResult> Create() 
         {
-            var model = new CreateSchoolVM
-            {
-                 Courses= await courseService.GetAll(),
-                Cities = await dbcontext.Cities.ToListAsync()
-            };
-            return View(model);
+            
+            return View(await schoolService.FillCreateSchoolVM());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateSchoolVM school)
+        public async Task<ActionResult> Create(CreateSchoolVM school)
         {
             if (ModelState.IsValid)
             {
@@ -121,29 +125,14 @@ namespace StudentReviewManager.PL.Controllers
             return View(school);
         }
 
-        public async Task<IActionResult> Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            var school = await schoolService.GetById(id);
-            if (school == null)
-            {
-                return NotFound();
-            }
-            var editModel = new SchoolEditFillVM()
-            {
-                Cities = await dbcontext.Cities.ToListAsync(),
-                CityId = school.City.Id,
-                CoursesIDs = school.Courses.Select(q=>q.Id).ToList(),
-                Description = school.Description,
-                Name = school.Name,
-                CoursesAll = await courseService.GetAll(),
-                ID = school.Id,
-            };
-            return View(editModel);
+            return View(await schoolService.FillSchoolEditVM(id));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(SchoolEditFillVM school)
+        public async Task<ActionResult> Edit(SchoolEditFillVM school)
         {
 
             if (ModelState.IsValid)
@@ -155,7 +144,7 @@ namespace StudentReviewManager.PL.Controllers
             return View(school);
         }
 
-        public async Task<IActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             var school = await schoolService.GetById(id);
             if (school == null)
@@ -167,13 +156,13 @@ namespace StudentReviewManager.PL.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
             await schoolService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        /*public async Task<IActionResult> Filter(int? cityId, int[] courseIds)
+        /*public async Task<ActionResult> Filter(int? cityId, int[] courseIds)
         {
             var schools = await schoolService.FilterSchoolsasync(cityId, courseIds);
             var viewModel = new FilterSchoolsViewModel
@@ -188,7 +177,7 @@ namespace StudentReviewManager.PL.Controllers
         }*/
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteReview(int id)
+        public async Task<ActionResult> DeleteReview(int id)
         {
             await reviewService.Delete(id);
             return RedirectToAction(nameof(Index));
@@ -197,7 +186,7 @@ namespace StudentReviewManager.PL.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> AddCourseToSchool(int schoolId, int courseId)
+        public async Task<ActionResult> AddCourseToSchool(int schoolId, int courseId)
         {
             await schoolService.AddCourse(schoolId, courseId);
             return RedirectToAction("AdminDetails", new { id = schoolId });
@@ -206,7 +195,7 @@ namespace StudentReviewManager.PL.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> RemoveCourseFromSchool(int schoolId, int courseId)
+        public async Task<ActionResult> RemoveCourseFromSchool(int schoolId, int courseId)
         {
             await schoolService.RemoveCourse(schoolId, courseId);
             return RedirectToAction("AdminDetails", new { id = schoolId });

@@ -16,8 +16,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 );
 
 builder
-    .Services.AddDefaultIdentity<User>( /*options => { options.SignIn.RequireConfirmedAccount = false; options.Password =}*/
-    )
+    .Services.AddDefaultIdentity<User>( options => { options.SignIn.RequireConfirmedAccount = false;
+        options.SignIn.RequireConfirmedPhoneNumber = false; options.SignIn.RequireConfirmedEmail = false;
+        options.User.RequireUniqueEmail = false;
+    })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();

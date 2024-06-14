@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StudentReviewManager.BLL.Services.interfaces;
 using StudentReviewManager.DAL.Data;
 using StudentReviewManager.DAL.Models;
@@ -28,70 +30,132 @@ namespace StudentReviewManager.BLL.Services.Realization
             {
                 Name = course.Name,
                 Description = course.Description,
-                Specialty = await dbcontext.Specialties.FirstOrDefaultAsync(q => q.Id == course.SpecialtyId),
+                Specialty = await dbcontext.Specialties.FirstOrDefaultAsync(q =>q.Id == course.SpecialtyId),
                 Degree = await dbcontext.Degrees.FirstOrDefaultAsync(q => q.Id == course.DegreeId),
             };
-            dbcontext.Add(course);
+            dbcontext.Courses.Add(course_);
             await dbcontext.SaveChangesAsync();
         }
 
         public async Task Delete(int id)
         {
-            var course = GetById(id);
-            dbcontext.Remove(course);
-            await dbcontext.SaveChangesAsync();
+            var course = await dbcontext.Courses.FirstOrDefaultAsync();
+            if (course != null)
+            {
+                dbcontext.Courses.Remove(course);
+                await dbcontext.SaveChangesAsync();
+            }
         }
 
-        public async Task<ICollection<Course>> GetAll()
+        public async Task<CreateCourseVM> FillCreateCourseVM()
+        {
+            return new CreateCourseVM
+            {
+                Specialties = await dbcontext.Specialties.ToListAsync(),
+                Degrees = await dbcontext.Degrees.ToListAsync()
+            };
+        }
+
+        public async Task<CourseEditFillVM> FillCourseEditVM(int id)
+        {
+            var course = await GetById(id);
+            return new CourseEditFillVM
+            {
+                ID = course.Id,
+                Name = course.Name,
+                Description = course.Description,
+                
+                Degrees = await dbcontext.Degrees.ToListAsync(),
+                Specialties = await dbcontext.Specialties.ToListAsync(),
+            };
+        }
+
+        public async Task<ICollection<CourseVM>> GetAll()
         {
             var courses = await dbcontext
                 .Courses.Include(post => post.School)
+                .Include(q => q.Degree)
+                .Include(q => q.Specialty)
                 .Include(c => c.Reviews)
                 .ThenInclude(reply => reply.User)
                 .ToListAsync();
-            return courses;
+            List<CourseVM> coursesVM = new List<CourseVM> { };
+            foreach (var course in courses)
+            {
+                coursesVM.Add(
+                    new CourseVM
+                    {
+                        AverageRating = await GetAvgRating(course.Id),
+                        Id = course.Id,
+                        SchoolName = course.School?.Name ?? "",
+                        DegreeName = course.Degree.Name,
+                        Description = course.Description,
+                        Name = course.Name,
+                        Reviews = course.Reviews,
+                        SpecialtyName = course.Specialty.Name
+                    }
+                );
+            }
+            return coursesVM;
         }
 
-        public async Task<Course> GetById(int id)
+        public async Task<CourseVM> GetById(int id)
         {
-            var courses = await dbcontext
+            var course = await dbcontext
                 .Courses.Where(c => c.Id == id)
                 .Include(c => c.School)
                 .Include(c => c.Degree)
+                .Include(q => q.Specialty)
                 .Include(c => c.Reviews)
                 .ThenInclude(rev => rev.User)
                 .FirstOrDefaultAsync();
-            return courses;
+
+            if (course == null) return null;
+
+            var courseVM = new CourseVM
+            {
+                Name = course.Name,
+                SchoolName = course.Name,
+                Id = course.Id,
+                AverageRating = await GetAvgRating(course.Id),
+                DegreeName = course.Degree.Name,
+                Description = course.Description,
+                Reviews = course.Reviews,
+                SpecialtyName = course.Specialty.Name,
+            };
+            return courseVM;
         }
 
         public async Task<Double> GetAvgRating(int id)
         {
-            var courses = await dbcontext
-                .Courses.Where(c => c.Id == id)
-                .Include(c => c.Reviews)
-                .FirstOrDefaultAsync();
-            double AverageRatingg = 0;
-            if (courses != null)
+            var reviews = await dbcontext
+               .Reviews.Where(c => c.CourseId == id).ToListAsync();
+
+            if (reviews.Any())
             {
-                AverageRatingg = courses.Reviews.Where(r => r.IsAuthorized).Average(r => r.Rating);
+                return reviews.Where(r => r.IsAuthorized).Average(r => r.Rating);
             }
-            return AverageRatingg;
+            return 0;
         }
 
         public async Task<int> GetReviewsCount(int CourseId)
         {
-            var course = await GetById(CourseId);
-            return course.Reviews.Count();
+            
+            return await dbcontext.Reviews.Where(c => c.CourseId == CourseId).CountAsync(); ;
         }
 
         public async Task Edit(CourseEditFillVM course)
         {
-            var _course = await GetById(course.ID);
+            var _course =await dbcontext.Courses.Where(q=>q.Id==course.ID).FirstOrDefaultAsync();
             if (_course != null)
             {
                 _course.Name = course.Name;
                 _course.Description = course.Description;
-                _course.Specialty = await dbcontext.Specialties.Where(q => q.Id == course.SpecialtyId).FirstOrDefaultAsync();
+                var specialty = await dbcontext.Specialties.Where(q => q.Id == course.SpecialtyId).FirstOrDefaultAsync();
+                if (specialty != null)
+                {
+                    _course.Specialty = specialty;
+                }
                 _course.DegreeId = course.DegreeId;
             }
             dbcontext.Courses.Update(_course);

@@ -13,7 +13,7 @@ namespace StudentReviewManager.PL.Controllers
             this.searchService = searchService;
         }
 
-        public async Task<IActionResult> Index(string search)
+        public async Task<ActionResult> Index(string search)
         {
             var schools = await searchService.SearchSchools(search);
             var courses = await searchService.SearchCourses(search);

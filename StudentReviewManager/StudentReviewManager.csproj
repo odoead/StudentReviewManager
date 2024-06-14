@@ -33,7 +33,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DAL\Data\Migrations\" />
     <Folder Include="PL\Views\" />
   </ItemGroup>
 </Project>

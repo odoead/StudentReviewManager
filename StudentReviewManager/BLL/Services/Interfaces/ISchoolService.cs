@@ -6,15 +6,20 @@ namespace StudentReviewManager.BLL.Services.interfaces
     public interface ISchoolService
     {
         Task AddCourse(int id, int courseId);
+
         Task AddReview(int id, Review review);
 
         Task Create(CreateSchoolVM school);
 
         Task Delete(int id);
 
-        Task<ICollection<School>> GetAll();
+        Task<ICollection<SchoolVM>> GetAll();
 
-        Task<School> GetById(int id);
+        Task<SchoolVM> GetById(int id);
+
+        Task<CreateSchoolVM> FillCreateSchoolVM();
+
+        Task<SchoolEditFillVM> FillSchoolEditVM(int id);
 
         Task<int> GetReviewsCount(int id);
 

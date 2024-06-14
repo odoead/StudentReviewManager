@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudentReviewManager.DAL.Data;
 
@@ -11,9 +12,11 @@ using StudentReviewManager.DAL.Data;
 namespace StudentReviewManager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240613145521_updateDBReview")]
+    partial class updateDBReview
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,7 +243,7 @@ namespace StudentReviewManager.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cities", (string)null);
+                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("StudentReviewManager.DAL.Models.Course", b =>
@@ -276,7 +279,7 @@ namespace StudentReviewManager.Migrations
 
                     b.HasIndex("SpecialtyId");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("StudentReviewManager.DAL.Models.Degree", b =>
@@ -293,7 +296,7 @@ namespace StudentReviewManager.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Degrees", (string)null);
+                    b.ToTable("Degrees");
                 });
 
             modelBuilder.Entity("StudentReviewManager.DAL.Models.Review", b =>
@@ -341,7 +344,7 @@ namespace StudentReviewManager.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("StudentReviewManager.DAL.Models.School", b =>
@@ -367,7 +370,7 @@ namespace StudentReviewManager.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("Schools", (string)null);
+                    b.ToTable("Schools");
                 });
 
             modelBuilder.Entity("StudentReviewManager.DAL.Models.Specialty", b =>
@@ -387,7 +390,7 @@ namespace StudentReviewManager.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Specialties", (string)null);
+                    b.ToTable("Specialties");
                 });
 
             modelBuilder.Entity("StudentReviewManager.DAL.Models.User", b =>
@@ -397,7 +400,7 @@ namespace StudentReviewManager.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

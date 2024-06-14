@@ -18,8 +18,8 @@ namespace StudentReviewManager.BLL.Services.Realization
         {
             return await dbcontext
                 .Reviews.Include(r => r.Course)
-                .Include(post => post.School)
-                .FirstOrDefaultAsync();
+                .Include(r => r.School)
+                .FirstOrDefaultAsync(r => r.Id == id);
         }
 
         public async Task Delete(int reviewId)

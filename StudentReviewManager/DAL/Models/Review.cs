@@ -18,8 +18,8 @@ namespace StudentReviewManager.DAL.Models
         public bool IsAuthorized { get; set; }
 
         [ForeignKey("UserId")]
-        public User User { get; set; }
-        public string UserId { get; set; }
+        public User? User { get; set; }
+        public string? UserId { get; set; }
 
         [ForeignKey("SchoolId")]
         public School? School { get; set; }
