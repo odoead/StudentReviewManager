@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.EntityFrameworkCore;
 using StudentReviewManager.BLL.Services.interfaces;
 using StudentReviewManager.DAL.Data;
 using StudentReviewManager.DAL.Models;
@@ -23,6 +21,7 @@ namespace StudentReviewManager.BLL.Services.Realization
             dbcontext.Reviews.Add(review);
             await dbcontext.SaveChangesAsync();
         }
+
 
         public async Task Create(CreateCourseVM course)
         {
@@ -113,7 +112,7 @@ namespace StudentReviewManager.BLL.Services.Realization
             {
                 Name = course.Name,
                 SchoolName = course.Name,
-                Id = course.Id,
+                Id = id,
                 AverageRating = await GetAvgRating(course.Id),
                 DegreeName = course.Degree.Name,
                 Description = course.Description,

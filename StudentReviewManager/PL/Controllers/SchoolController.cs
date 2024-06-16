@@ -42,27 +42,6 @@ namespace StudentReviewManager.PL.Controllers
             {
                 return NotFound();
             }
-            /*List<CourseVM> coursesVM = new List<CourseVM> { };
-            foreach (var course in school.Courses)
-            {
-                coursesVM.Add(
-                    new CourseVM
-                    {
-                        AverageRating = await courseService.GetAvgRating(course.Id),
-                        Id = course.Id,
-                        SchoolName = course.School.Name
-                    }
-                );
-            }
-            var schoolVM = new SchoolVM
-            {
-                CityName = school.City.Name,
-                Description = school.Description,
-                Id = school.Id,
-                Name = school.Name,
-                Reviews = school.Reviews,
-                Courses = coursesVM
-            };*/
             return View(school);
         }
 
@@ -134,10 +113,10 @@ namespace StudentReviewManager.PL.Controllers
         }*/
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteReview(int id)
+        public async Task<ActionResult> DeleteReview(int id,int schoolId)
         {
             await reviewService.Delete(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "School", new { id = schoolId });
         }
 
         [HttpPost]

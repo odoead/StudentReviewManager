@@ -1,9 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StudentReviewManager.DAL.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace StudentReviewManager.Areas.Identity.Pages.Account
 {

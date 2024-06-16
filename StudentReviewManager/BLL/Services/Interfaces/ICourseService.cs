@@ -16,6 +16,6 @@ namespace StudentReviewManager.BLL.Services.interfaces
         Task<CourseEditFillVM> FillCourseEditVM(int id);
         Task<CreateCourseVM> FillCreateCourseVM();
         Task<IEnumerable<Course>> FilterCourses(int? specialtyId, int? schoolId, int? degreeId);
-        
+
     }
 }

@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using StudentReviewManager.BLL.Services.interfaces;
 using StudentReviewManager.DAL.Data;
-using StudentReviewManager.DAL.Models;
 using StudentReviewManager.PL.VM.Course;
 
 namespace StudentReviewManager.PL.Controllers
@@ -20,6 +18,13 @@ namespace StudentReviewManager.PL.Controllers
             this.dbcontext = dbcontext;
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteReview(int id, int courseId)
+        {
+            await reviewService.Delete(id);
+            return RedirectToAction("Details", "Course", new { id = courseId });
+        }
         public async Task<ActionResult> Index()
         {
             var courses = await courseService.GetAll();
@@ -104,12 +109,6 @@ namespace StudentReviewManager.PL.Controllers
             };
             return View(viewModel);
         }*/
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteReview(int id)
-        {
-            await reviewService.Delete(id);
-            return RedirectToAction(nameof(Index));
-        }
+        
     }
 }

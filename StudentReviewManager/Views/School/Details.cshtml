@@ -3,6 +3,7 @@
 @inject SignInManager<StudentReviewManager.DAL.Models.User> SignInManager
 @{
     ViewData["Title"] = "School Details";
+    bool isAdmin = User.IsInRole("Admin") && SignInManager.IsSignedIn(User);
 }
 <h1>@Model.Name</h1>
 <p>@Model.Description</p>
@@ -17,6 +18,10 @@
             <th>Rating</th>
             <th>User</th>
             <th>Created At</th>
+            @if (isAdmin)
+            {
+                <th>Action</th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -26,8 +31,26 @@
                 <td>@Html.DisplayFor(modelItem => review.Title)</td>
                 <td>@Html.DisplayFor(modelItem => review.Content)</td>
                 <td>@Html.DisplayFor(modelItem => review.Rating)</td>
-                <td>@Html.DisplayFor(modelItem => review.User.UserName)</td>
+                <td>
+                    @if (string.IsNullOrEmpty(review.User?.UserName))
+                    {
+                        @:Anonymous
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => review.User.UserName)
+                    }
+                </td>
                 <td>@Html.DisplayFor(modelItem => review.CreatedAt)</td>
+                @if (isAdmin)
+                {
+                    <td>
+                        <form asp-action="DeleteReview" asp-route-id="@review.Id" asp-route-schoolId="@Model.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                }
             </tr>
         }
     </tbody>
@@ -54,22 +77,25 @@
         }
     </tbody>
 </table>
-<h2>Submit a Review</h2>
-@using (Html.BeginForm("SubmitReview", "Review", FormMethod.Post))
+@if (!User.IsInRole("Admin"))
 {
-    <div class="form-group">
-        <label for="Title">Title</label>
-        <input type="text" class="form-control" id="Title" name="Title" required>
-    </div>
-    <div class="form-group">
-        <label for="Content">Content</label>
-        <textarea class="form-control" id="Content" name="Content" required></textarea>
-    </div>
-    <div class="form-group">
-        <label for="Rating">Rating</label>
-        <input type="number" class="form-control" id="Rating" name="Rating" min="0" max="5" required>
-    </div>
-    <input type="hidden" name="SchoolId" value="@Model.Id" />
-    <input type="hidden" name="IsAuthorized" value="@(SignInManager.IsSignedIn(User) ? "true" : "false")" />
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <h2>Submit a Review</h2>
+    @using (Html.BeginForm("SubmitReview", "Review", FormMethod.Post))
+    {
+        <div class="form-group">
+            <label for="Title">Title</label>
+            <input type="text" class="form-control" id="Title" name="Title" required>
+        </div>
+        <div class="form-group">
+            <label for="Content">Content</label>
+            <textarea class="form-control" id="Content" name="Content" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="Rating">Rating</label>
+            <input type="number" class="form-control" id="Rating" name="Rating" min="0" max="5" required>
+        </div>
+        <input type="hidden" name="SchoolId" value="@Model.Id" />
+        <input type="hidden" name="IsAuthorized" value="@(SignInManager.IsSignedIn(User) ? "true" : "false")" />
+        <button type="submit" class="btn btn-primary">Submit</button>
+    }
 }

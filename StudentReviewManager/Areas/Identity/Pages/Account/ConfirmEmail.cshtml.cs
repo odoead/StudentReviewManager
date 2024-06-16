@@ -1,9 +1,9 @@
-﻿using System.Text;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using StudentReviewManager.DAL.Models;
+using System.Text;
 
 namespace StudentReviewManager.Areas.Identity.Pages.Account
 {

@@ -1,5 +1,4 @@
-﻿using StudentReviewManager.DAL.Models;
-using StudentReviewManager.PL.VM.Course;
+﻿using StudentReviewManager.PL.VM.Course;
 using StudentReviewManager.PL.VM.School;
 
 namespace StudentReviewManager.BLL.Services.interfaces

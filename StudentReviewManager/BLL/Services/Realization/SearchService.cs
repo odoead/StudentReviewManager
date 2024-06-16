@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudentReviewManager.BLL.Services.interfaces;
 using StudentReviewManager.DAL.Data;
-using StudentReviewManager.DAL.Models;
 using StudentReviewManager.PL.VM.Course;
 using StudentReviewManager.PL.VM.School;
 
