@@ -15,11 +15,7 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
         private readonly SignInManager<User> _signInManager;
         private readonly IUserStore<User> _userStore;
 
-        public ExternalLoginsModel(
-            UserManager<User> userManager,
-            SignInManager<User> signInManager,
-            IUserStore<User> userStore
-        )
+        public ExternalLoginsModel(UserManager<User> userManager, SignInManager<User> signInManager, IUserStore<User> userStore)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -65,19 +61,13 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
             string passwordHash = null;
             if (_userStore is IUserPasswordStore<User> userPasswordStore)
             {
-                passwordHash = await userPasswordStore.GetPasswordHashAsync(
-                    user,
-                    HttpContext.RequestAborted
-                );
+                passwordHash = await userPasswordStore.GetPasswordHashAsync(user, HttpContext.RequestAborted);
             }
             ShowRemoveButton = passwordHash != null || CurrentLogins.Count > 1;
             return Page();
         }
 
-        public async Task<IActionResult> OnPostRemoveLoginasync(
-            string loginProvider,
-            string providerKey
-        )
+        public async Task<IActionResult> OnPostRemoveLoginasync(string loginProvider, string providerKey)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -101,11 +91,7 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
             // Request a redirect to the external login provider to link a login for the current user
             var redirectUrl = Url.Page("./ExternalLogins", pageHandler: "LinkLoginCallback");
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(
-                provider,
-                redirectUrl,
-                _userManager.GetUserId(User)
-            );
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, _userManager.GetUserId(User));
             return new ChallengeResult(provider, properties);
         }
 
@@ -120,15 +106,12 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
             var info = await _signInManager.GetExternalLoginInfoAsync(userId);
             if (info == null)
             {
-                throw new InvalidOperationException(
-                    $"Unexpected error occurred loading external login info."
-                );
+                throw new InvalidOperationException($"Unexpected error occurred loading external login info.");
             }
             var result = await _userManager.AddLoginAsync(user, info);
             if (!result.Succeeded)
             {
-                StatusMessage =
-                    "The external login was not added. External logins can only be associated with one account.";
+                StatusMessage = "The external login was not added. External logins can only be associated with one account.";
                 return RedirectToPage();
             }
             // Clear the existing external cookie to ensure a clean login process

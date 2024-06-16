@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using StudentReviewManager.BLL.Services.interfaces;
 using StudentReviewManager.DAL.Data;
+using StudentReviewManager.DAL.Models;
 using StudentReviewManager.PL.VM.Course;
 
 namespace StudentReviewManager.PL.Controllers
@@ -12,11 +13,7 @@ namespace StudentReviewManager.PL.Controllers
         private readonly IReviewService reviewService;
         private readonly ApplicationDbContext dbcontext;
 
-        public CourseController(
-            ICourseService courseService,
-            IReviewService reviewService,
-            ApplicationDbContext dbcontext
-        )
+        public CourseController(ICourseService courseService, IReviewService reviewService, ApplicationDbContext dbcontext)
         {
             this.courseService = courseService;
             this.reviewService = reviewService;
@@ -26,7 +23,7 @@ namespace StudentReviewManager.PL.Controllers
         public async Task<ActionResult> Index()
         {
             var courses = await courseService.GetAll();
-            
+
             return View(courses);
         }
 
@@ -42,7 +39,6 @@ namespace StudentReviewManager.PL.Controllers
 
         public async Task<ActionResult> Create()
         {
-            
             return View(await courseService.FillCreateCourseVM());
         }
 
@@ -60,8 +56,7 @@ namespace StudentReviewManager.PL.Controllers
 
         public async Task<ActionResult> Edit(int id)
         {
-            
-            return View(await courseService.FillCourseEditVM( id));
+            return View(await courseService.FillCourseEditVM(id));
         }
 
         [HttpPost]
@@ -87,11 +82,11 @@ namespace StudentReviewManager.PL.Controllers
             return View(course);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(CourseVM course)
         {
-            await courseService.Delete(id);
+            await courseService.Delete(course.Id);
             return RedirectToAction(nameof(Index));
         }
 

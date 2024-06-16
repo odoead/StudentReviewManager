@@ -12,11 +12,7 @@ namespace StudentReviewManager.PL.Controllers
         private readonly ISchoolService schoolService;
         private readonly UserManager<User> userManager;
 
-        public ReviewController(
-            ISchoolService schoolService,
-            ICourseService courseService,
-            UserManager<User> userManager
-        )
+        public ReviewController(ISchoolService schoolService, ICourseService courseService, UserManager<User> userManager)
         {
             this.courseService = courseService;
             this.schoolService = schoolService;
@@ -44,14 +40,14 @@ namespace StudentReviewManager.PL.Controllers
                 SchoolId = model?.SchoolId,
                 CourseId = model?.CourseId
             };
-            if (model.CourseId != 0)
+            if (model.CourseId.HasValue)
             {
                 await courseService.AddReview(model.CourseId, review);
                 return RedirectToAction("Details", "Course", new { id = model.CourseId });
             }
-            else if (model.SchoolId != 0)
+            else if (model.SchoolId.HasValue)
             {
-               await schoolService.AddReview(model.SchoolId, review);
+                await schoolService.AddReview(model.SchoolId, review);
                 return RedirectToAction("Details", "School", new { id = model.SchoolId });
             }
             else

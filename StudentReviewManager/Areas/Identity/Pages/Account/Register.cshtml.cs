@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StudentReviewManager.DAL.Models;
@@ -12,19 +13,24 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly IUserStore<User> _userStore;
+        private readonly IUserEmailStore<User> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
+        private readonly IEmailSender _emailSender;
 
         public RegisterModel(
             UserManager<User> userManager,
             IUserStore<User> userStore,
             SignInManager<User> signInManager,
-            ILogger<RegisterModel> logger
+            ILogger<RegisterModel> logger,
+            IEmailSender emailSender
         )
         {
             _userManager = userManager;
             _userStore = userStore;
+            _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
+            _emailSender = emailSender;
         }
 
         [BindProperty]
@@ -72,15 +78,18 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = Input.UserName, Email = Input.Email, CreatedAt = DateTime.UtcNow };
+                var user = CreateUser();
+                await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                user.UserName = Input.UserName;
+                user.CreatedAt = DateTime.UtcNow;
+                //var user = new User { UserName = Input.UserName, Email = Input.Email, CreatedAt = DateTime.UtcNow };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, "User");
                     _logger.LogInformation("User created a new account with password.");
-
-                    
-                    await _signInManager.SignInAsync(user, isPersistent: false);// Sign in  without email confirmation
+                    await _userManager.AddToRoleAsync(user, "User");
+                    await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)
@@ -88,8 +97,24 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
+            // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        private User CreateUser()
+        {
+            try
+            {
+                return Activator.CreateInstance<User>();
+            }
+            catch
+            {
+                throw new InvalidOperationException(
+                    $"Can't create an instance of '{nameof(User)}'. "
+                        + $"Ensure that '{nameof(User)}' is not an abstract class and has a parameterless constructor, or alternatively "
+                        + $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml"
+                );
+            }
         }
 
         private IUserEmailStore<User> GetEmailStore()

@@ -7,11 +7,7 @@ namespace StudentReviewManager.DAL.Data
 {
     public class SeedData
     {
-        public static async Task Seed(
-            UserManager<E.User> userManager,
-            RoleManager<IdentityRole> roleManager,
-            ApplicationDbContext dbcontext
-        )
+        public static async Task Seed(UserManager<E.User> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext dbcontext)
         {
             await SeedRole(roleManager);
             await SeedUsers(userManager);
@@ -24,11 +20,7 @@ namespace StudentReviewManager.DAL.Data
         {
             if (await userManager.FindByNameAsync("admin@localhost.com") == null)
             {
-                var admin = new E.User
-                {
-                    UserName = "admin@localhost.com",
-                    Email = "admin@localhost.com",
-                };
+                var admin = new E.User { UserName = "admin@localhost.com", Email = "admin@localhost.com", };
                 var result = await userManager.CreateAsync(admin, "1q2w3e4rA!");
                 if (result.Succeeded)
                 {
@@ -40,7 +32,7 @@ namespace StudentReviewManager.DAL.Data
         private static async Task SeedCities(ApplicationDbContext dbcontext)
         {
             #region cities
-            string[] seedCities =
+            string[] seedNames =
             [
                 "Kyiv",
                 "Kharkiv",
@@ -108,9 +100,14 @@ namespace StudentReviewManager.DAL.Data
                 "Chernihiv",
             ];
             #endregion
+            List<City> seedCities = new List<City>();
+            foreach (string name in seedNames)
+            {
+                seedCities.Add(new City { Name = name });
+            }
             if (!await dbcontext.Cities.AnyAsync())
             {
-                await dbcontext.Cities.AddRangeAsync();
+                await dbcontext.Cities.AddRangeAsync(seedCities);
                 await dbcontext.SaveChangesAsync();
             }
         }
@@ -119,9 +116,9 @@ namespace StudentReviewManager.DAL.Data
         {
             var degrees = new Degree[]
             {
-                new Degree {  Name = "Bachelor" },
-                new Degree {  Name = "Master" },
-                new Degree {  Name = "Junior" },
+                new Degree { Name = "Bachelor" },
+                new Degree { Name = "Master" },
+                new Degree { Name = "Junior" },
             };
             if (!await dbContext.Degrees.AnyAsync())
             {
@@ -134,9 +131,9 @@ namespace StudentReviewManager.DAL.Data
         {
             var specs = new Specialty[]
             {
-               new Specialty{Code= 125,Name="Math"},
-               new Specialty{Code= 167,Name="Physics"},
-               new Specialty{Code= 167,Name="Ecology",},
+                new Specialty { Code = 125, Name = "Math" },
+                new Specialty { Code = 167, Name = "Physics" },
+                new Specialty { Code = 167, Name = "Ecology", },
             };
             if (!await dbContext.Specialties.AnyAsync())
             {

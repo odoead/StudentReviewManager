@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using StudentReviewManager.BLL.Services.interfaces;
 using StudentReviewManager.DAL.Data;
-using StudentReviewManager.DAL.Models;
-using StudentReviewManager.PL.VM.Course;
 using StudentReviewManager.PL.VM.School;
 
 namespace StudentReviewManager.PL.Controllers
@@ -34,46 +31,8 @@ namespace StudentReviewManager.PL.Controllers
         public async Task<ActionResult> Index()
         {
             var schools = await schoolService.GetAll();
-            /*var schoolsVM = new List<SchoolVM>();
-            foreach (var school in schools)
-            {
-                List<CourseVM> coursesVM = new List<CourseVM> { };
-                foreach (var course in school.Courses)
-                {
-                    coursesVM.Add(
-                        new CourseVM
-                        {
-                            AverageRating = await courseService.GetAvgRating(course.Id),
-                            Id = course.Id,
-                            SchoolName = course.School.Name
-                        }
-                    );
-                }
-                schoolsVM.Add(
-                    new SchoolVM
-                    {
-                        CityName = school.City.Name,
-                        Description = school.Description,
-                        Id = school.Id,
-                        Name = school.Name,
-                        Reviews = school.Reviews,
-                        Courses = coursesVM,
-                        AverageRating = await schoolService.GetAvgRating(school.Id),
-                    }
-                );
-            }*/
-           var  schoolsVM= new List<SchoolVM>();
-            var Coursess = new List<CourseVM>();
-            Coursess.Add(new CourseVM { AverageRating = 3, DegreeName = "test", Description = "descr", Id = 1, Name = "ttt", SpecialtyName = "SpecialtyName", SchoolName = "school" });
-            schoolsVM.Add(new SchoolVM
-            {
-                AverageRating = 5,
-                CityName = "dnipro",
-               Courses=Coursess,Name="test",Id=55
-            }
-            
-            );
-            return View(schoolsVM);
+
+            return View(schools);
         }
 
         public async Task<ActionResult> Details(int id)
@@ -107,9 +66,8 @@ namespace StudentReviewManager.PL.Controllers
             return View(school);
         }
 
-        public async Task<ActionResult> Create() 
+        public async Task<ActionResult> Create()
         {
-            
             return View(await schoolService.FillCreateSchoolVM());
         }
 
@@ -134,7 +92,6 @@ namespace StudentReviewManager.PL.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(SchoolEditFillVM school)
         {
-
             if (ModelState.IsValid)
             {
                 await schoolService.Edit(school);
@@ -154,11 +111,11 @@ namespace StudentReviewManager.PL.Controllers
             return View(school);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(SchoolVM school)
         {
-            await schoolService.Delete(id);
+            await schoolService.Delete(school.Id);
             return RedirectToAction(nameof(Index));
         }
 
@@ -185,7 +142,6 @@ namespace StudentReviewManager.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-
         public async Task<ActionResult> AddCourseToSchool(int schoolId, int courseId)
         {
             await schoolService.AddCourse(schoolId, courseId);
@@ -194,7 +150,6 @@ namespace StudentReviewManager.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-
         public async Task<ActionResult> RemoveCourseFromSchool(int schoolId, int courseId)
         {
             await schoolService.RemoveCourse(schoolId, courseId);

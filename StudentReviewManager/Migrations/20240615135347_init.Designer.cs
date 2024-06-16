@@ -12,8 +12,8 @@ using StudentReviewManager.DAL.Data;
 namespace StudentReviewManager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240613063640_added_optional_deps")]
-    partial class added_optional_deps
+    [Migration("20240615135347_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -334,7 +334,6 @@ namespace StudentReviewManager.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -465,7 +464,8 @@ namespace StudentReviewManager.Migrations
 
                     b.HasOne("StudentReviewManager.DAL.Models.School", "School")
                         .WithMany("Courses")
-                        .HasForeignKey("SchoolId");
+                        .HasForeignKey("SchoolId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("StudentReviewManager.DAL.Models.Specialty", "Specialty")
                         .WithMany("Courses")
@@ -484,17 +484,17 @@ namespace StudentReviewManager.Migrations
                 {
                     b.HasOne("StudentReviewManager.DAL.Models.Course", "Course")
                         .WithMany("Reviews")
-                        .HasForeignKey("CourseId");
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("StudentReviewManager.DAL.Models.School", "School")
                         .WithMany("Reviews")
-                        .HasForeignKey("SchoolId");
+                        .HasForeignKey("SchoolId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("StudentReviewManager.DAL.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Course");
 

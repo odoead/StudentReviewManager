@@ -6,9 +6,12 @@
     ViewData["Title"] = "Schools";
 }
 <h1>Schools</h1>
-<p>
-    <a class="btn btn-primary" href="/School/Create">Create New</a>
-</p>
+@if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+{
+    <p>
+        <a class="btn btn-primary" href="/School/Create">Create New</a>
+    </p>
+}
 <table class="table">
     <thead>
         <tr>

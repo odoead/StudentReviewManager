@@ -17,7 +17,7 @@ namespace StudentReviewManager.BLL.Services.Realization
             dbcontext = context;
         }
 
-        public async Task AddReview(int id, Review review)
+        public async Task AddReview(int? id, Review review)
         {
             review.CourseId = id;
             dbcontext.Reviews.Add(review);
@@ -30,7 +30,7 @@ namespace StudentReviewManager.BLL.Services.Realization
             {
                 Name = course.Name,
                 Description = course.Description,
-                Specialty = await dbcontext.Specialties.FirstOrDefaultAsync(q =>q.Id == course.SpecialtyId),
+                Specialty = await dbcontext.Specialties.FirstOrDefaultAsync(q => q.Id == course.SpecialtyId),
                 Degree = await dbcontext.Degrees.FirstOrDefaultAsync(q => q.Id == course.DegreeId),
             };
             dbcontext.Courses.Add(course_);
@@ -39,7 +39,7 @@ namespace StudentReviewManager.BLL.Services.Realization
 
         public async Task Delete(int id)
         {
-            var course = await dbcontext.Courses.FirstOrDefaultAsync();
+            var course = await dbcontext.Courses.FirstOrDefaultAsync(q => q.Id == id);
             if (course != null)
             {
                 dbcontext.Courses.Remove(course);
@@ -49,11 +49,7 @@ namespace StudentReviewManager.BLL.Services.Realization
 
         public async Task<CreateCourseVM> FillCreateCourseVM()
         {
-            return new CreateCourseVM
-            {
-                Specialties = await dbcontext.Specialties.ToListAsync(),
-                Degrees = await dbcontext.Degrees.ToListAsync()
-            };
+            return new CreateCourseVM { Specialties = await dbcontext.Specialties.ToListAsync(), Degrees = await dbcontext.Degrees.ToListAsync() };
         }
 
         public async Task<CourseEditFillVM> FillCourseEditVM(int id)
@@ -64,7 +60,7 @@ namespace StudentReviewManager.BLL.Services.Realization
                 ID = course.Id,
                 Name = course.Name,
                 Description = course.Description,
-                
+
                 Degrees = await dbcontext.Degrees.ToListAsync(),
                 Specialties = await dbcontext.Specialties.ToListAsync(),
             };
@@ -110,7 +106,8 @@ namespace StudentReviewManager.BLL.Services.Realization
                 .ThenInclude(rev => rev.User)
                 .FirstOrDefaultAsync();
 
-            if (course == null) return null;
+            if (course == null)
+                return null;
 
             var courseVM = new CourseVM
             {
@@ -126,27 +123,29 @@ namespace StudentReviewManager.BLL.Services.Realization
             return courseVM;
         }
 
-        public async Task<Double> GetAvgRating(int id)
+        public async Task<Double> GetAvgRating(int? id)
         {
-            var reviews = await dbcontext
-               .Reviews.Where(c => c.CourseId == id).ToListAsync();
+            var reviews = await dbcontext.Reviews.Where(c => c.CourseId == id).ToListAsync();
 
             if (reviews.Any())
             {
-                return reviews.Where(r => r.IsAuthorized).Average(r => r.Rating);
+                if (reviews.Where(q => q.IsAuthorized).Any())
+                {
+                    return reviews.Where(r => r.IsAuthorized).Average(r => r.Rating);
+                }
+                return 0;
             }
             return 0;
         }
 
         public async Task<int> GetReviewsCount(int CourseId)
         {
-            
-            return await dbcontext.Reviews.Where(c => c.CourseId == CourseId).CountAsync(); ;
+            return await dbcontext.Reviews.Where(c => c.CourseId == CourseId).CountAsync();
         }
 
         public async Task Edit(CourseEditFillVM course)
         {
-            var _course =await dbcontext.Courses.Where(q=>q.Id==course.ID).FirstOrDefaultAsync();
+            var _course = await dbcontext.Courses.Where(q => q.Id == course.ID).FirstOrDefaultAsync();
             if (_course != null)
             {
                 _course.Name = course.Name;
@@ -156,17 +155,12 @@ namespace StudentReviewManager.BLL.Services.Realization
                 {
                     _course.Specialty = specialty;
                 }
-                _course.DegreeId = course.DegreeId;
             }
             dbcontext.Courses.Update(_course);
             await dbcontext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Course>> FilterCourses(
-            int? specialtyId,
-            int? schoolId,
-            int? degreeId
-        )
+        public async Task<IEnumerable<Course>> FilterCourses(int? specialtyId, int? schoolId, int? degreeId)
         {
             var query = dbcontext.Courses;
             if (specialtyId.HasValue)

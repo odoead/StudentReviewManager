@@ -11,6 +11,7 @@ namespace StudentReviewManager.PL.Controllers
         {
             this.courseService = courseService;
         }
+
         public ActionResult Index()
         {
             return View();

@@ -14,11 +14,7 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<TwoFactorAuthenticationModel> _logger;
 
-        public TwoFactorAuthenticationModel(
-            UserManager<User> userManager,
-            SignInManager<User> signInManager,
-            ILogger<TwoFactorAuthenticationModel> logger
-        )
+        public TwoFactorAuthenticationModel(UserManager<User> userManager, SignInManager<User> signInManager, ILogger<TwoFactorAuthenticationModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -79,8 +75,7 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
                 return NotFound($"UnabletoloaduserwithID'{_userManager.GetUserId(User)}'.");
             }
             await _signInManager.ForgetTwoFactorClientAsync();
-            StatusMessage =
-                "Thecurrentbrowserhasbeenforgotten.Whenyouloginagainfromthisbrowseryouwillbepromptedforyour2facode.";
+            StatusMessage = "Thecurrentbrowserhasbeenforgotten.Whenyouloginagainfromthisbrowseryouwillbepromptedforyour2facode.";
             return RedirectToPage();
         }
     }

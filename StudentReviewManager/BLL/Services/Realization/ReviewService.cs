@@ -16,10 +16,7 @@ namespace StudentReviewManager.BLL.Services.Realization
 
         public async Task<Review> GetById(int id)
         {
-            return await dbcontext
-                .Reviews.Include(r => r.Course)
-                .Include(r => r.School)
-                .FirstOrDefaultAsync(r => r.Id == id);
+            return await dbcontext.Reviews.Include(r => r.Course).Include(r => r.School).FirstOrDefaultAsync(r => r.Id == id);
         }
 
         public async Task Delete(int reviewId)

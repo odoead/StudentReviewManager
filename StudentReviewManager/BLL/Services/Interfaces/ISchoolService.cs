@@ -7,7 +7,7 @@ namespace StudentReviewManager.BLL.Services.interfaces
     {
         Task AddCourse(int id, int courseId);
 
-        Task AddReview(int id, Review review);
+        Task AddReview(int? id, Review review);
 
         Task Create(CreateSchoolVM school);
 

@@ -9,20 +9,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionstring =
-    builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? throw new InvalidOperationException("Connection string  'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionstring)
-);
+    builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string  'DefaultConnection' not found.");
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionstring));
 
 builder
-    .Services.AddDefaultIdentity<User>( options => { options.SignIn.RequireConfirmedAccount = false;
-        options.SignIn.RequireConfirmedPhoneNumber = false; options.SignIn.RequireConfirmedEmail = false;
+    .Services.AddDefaultIdentity<User>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = false;
+        options.SignIn.RequireConfirmedPhoneNumber = false;
+        options.SignIn.RequireConfirmedEmail = false;
         options.User.RequireUniqueEmail = false;
     })
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+//.AddDefaultTokenProviders();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddScoped<ICourseService, CourseService>();
@@ -31,7 +31,8 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<ISearchService, SearchService>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-//builder.Services.AddAuthentication(); 
+
+//builder.Services.AddAuthentication();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -45,6 +46,7 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.UseDeveloperExceptionPage();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();

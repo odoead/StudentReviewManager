@@ -1,11 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable  disable
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StudentReviewManager.DAL.Models;
-using System.ComponentModel.DataAnnotations;
 
 namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
 {
@@ -15,11 +15,7 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<DeletePersonalDataModel> _logger;
 
-        public DeletePersonalDataModel(
-            UserManager<User> userManager,
-            SignInManager<User> signInManager,
-            ILogger<DeletePersonalDataModel> logger
-        )
+        public DeletePersonalDataModel(UserManager<User> userManager, SignInManager<User> signInManager, ILogger<DeletePersonalDataModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;

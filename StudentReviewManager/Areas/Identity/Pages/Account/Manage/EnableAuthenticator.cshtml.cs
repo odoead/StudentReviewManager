@@ -1,14 +1,14 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using StudentReviewManager.DAL.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text;
 using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using StudentReviewManager.DAL.Models;
 
 namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
 {
@@ -17,14 +17,9 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<User> _userManager;
         private readonly ILogger<EnableAuthenticatorModel> _logger;
         private readonly UrlEncoder _urlEncoder;
-        private const string AuthenticatorUriFormat =
-            "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
+        private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
-        public EnableAuthenticatorModel(
-            UserManager<User> userManager,
-            ILogger<EnableAuthenticatorModel> logger,
-            UrlEncoder urlEncoder
-        )
+        public EnableAuthenticatorModel(UserManager<User> userManager, ILogger<EnableAuthenticatorModel> logger, UrlEncoder urlEncoder)
         {
             _userManager = userManager;
             _logger = logger;
@@ -75,11 +70,7 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
-            [StringLength(
-                7,
-                ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
-                MinimumLength = 6
-            )]
+            [StringLength(7, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Text)]
             [Display(Name = "Verification Code")]
             public string Code { get; set; }
@@ -110,11 +101,7 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
             }
             // Strip spaces and hyphens
             var verificationCode = Input.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
-            var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
-                user,
-                _userManager.Options.Tokens.AuthenticatorTokenProvider,
-                verificationCode
-            );
+            var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
             if (!is2faTokenValid)
             {
                 ModelState.AddModelError("Input.Code", "Verification code is invalid.");
@@ -123,17 +110,11 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account.Manage
             }
             await _userManager.SetTwoFactorEnabledAsync(user, true);
             var userId = await _userManager.GetUserIdAsync(user);
-            _logger.LogInformation(
-                "User with ID '{UserId}' has enabled 2FA with an authenticator app.",
-                userId
-            );
+            _logger.LogInformation("User with ID '{UserId}' has enabled 2FA with an authenticator app.", userId);
             StatusMessage = "Your authenticator app has been verified.";
             if (await _userManager.CountRecoveryCodesAsync(user) == 0)
             {
-                var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(
-                    user,
-                    10
-                );
+                var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
                 RecoveryCodes = recoveryCodes.ToArray();
                 return RedirectToPage("./ShowRecoveryCodes");
             }

@@ -1,12 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable  disable
+using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using StudentReviewManager.DAL.Models;
-using System.Text;
 
 namespace StudentReviewManager.Areas.Identity.Pages.Account
 {
@@ -15,10 +15,7 @@ namespace StudentReviewManager.Areas.Identity.Pages.Account
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        public ConfirmEmailChangeModel(
-            UserManager<User> userManager,
-            SignInManager<User> signInManager
-        )
+        public ConfirmEmailChangeModel(UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

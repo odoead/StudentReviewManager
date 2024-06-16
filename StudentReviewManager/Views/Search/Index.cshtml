@@ -19,8 +19,8 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => school.Name)</td>
                 <td>@Html.DisplayFor(modelItem => school.Description)</td>
-                <td>@Html.DisplayFor(modelItem => school.City.Name)</td>
-                <td>Average Rating Calculation Here</td>
+                <td>@Html.DisplayFor(modelItem => school.CityName)</td>
+                <td>@Html.DisplayFor(modelItem => school.AverageRating)</td>
             </tr>
         }
     </tbody>
@@ -43,10 +43,10 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => course.Name)</td>
                 <td>@Html.DisplayFor(modelItem => course.Description)</td>
-                <td>@Html.DisplayFor(modelItem => course.Specialty.Name)</td>
-                <td>@Html.DisplayFor(modelItem => course.Degree.Name)</td>
-                <td>@Html.DisplayFor(modelItem => course.School.Name)</td>
-                <td>Average Rating Calculation Here</td>
+                <td>@Html.DisplayFor(modelItem => course.SpecialtyName)</td>
+                <td>@Html.DisplayFor(modelItem => course.DegreeName)</td>
+                <td>@Html.DisplayFor(modelItem => course.SchoolName)</td>
+                <td>@Html.DisplayFor(modelItem => course.AverageRating)</td>
             </tr>
         }
     </tbody>

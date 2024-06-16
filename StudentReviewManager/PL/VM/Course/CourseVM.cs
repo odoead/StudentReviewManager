@@ -13,7 +13,5 @@ namespace StudentReviewManager.PL.VM.Course
         public double AverageRating { get; set; }
         public ICollection<E.Review>? Reviews { get; set; }
         public int? SchoolId { get; set; }
-
-
     }
 }

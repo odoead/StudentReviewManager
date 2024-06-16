@@ -240,7 +240,7 @@ namespace StudentReviewManager.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cities", (string)null);
+                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("StudentReviewManager.DAL.Models.Course", b =>
@@ -276,7 +276,7 @@ namespace StudentReviewManager.Migrations
 
                     b.HasIndex("SpecialtyId");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("StudentReviewManager.DAL.Models.Degree", b =>
@@ -293,7 +293,7 @@ namespace StudentReviewManager.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Degrees", (string)null);
+                    b.ToTable("Degrees");
                 });
 
             modelBuilder.Entity("StudentReviewManager.DAL.Models.Review", b =>
@@ -341,7 +341,7 @@ namespace StudentReviewManager.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("StudentReviewManager.DAL.Models.School", b =>
@@ -367,7 +367,7 @@ namespace StudentReviewManager.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("Schools", (string)null);
+                    b.ToTable("Schools");
                 });
 
             modelBuilder.Entity("StudentReviewManager.DAL.Models.Specialty", b =>
@@ -387,7 +387,7 @@ namespace StudentReviewManager.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Specialties", (string)null);
+                    b.ToTable("Specialties");
                 });
 
             modelBuilder.Entity("StudentReviewManager.DAL.Models.User", b =>
@@ -397,7 +397,7 @@ namespace StudentReviewManager.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -461,7 +461,8 @@ namespace StudentReviewManager.Migrations
 
                     b.HasOne("StudentReviewManager.DAL.Models.School", "School")
                         .WithMany("Courses")
-                        .HasForeignKey("SchoolId");
+                        .HasForeignKey("SchoolId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("StudentReviewManager.DAL.Models.Specialty", "Specialty")
                         .WithMany("Courses")
@@ -480,11 +481,13 @@ namespace StudentReviewManager.Migrations
                 {
                     b.HasOne("StudentReviewManager.DAL.Models.Course", "Course")
                         .WithMany("Reviews")
-                        .HasForeignKey("CourseId");
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("StudentReviewManager.DAL.Models.School", "School")
                         .WithMany("Reviews")
-                        .HasForeignKey("SchoolId");
+                        .HasForeignKey("SchoolId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("StudentReviewManager.DAL.Models.User", "User")
                         .WithMany()
