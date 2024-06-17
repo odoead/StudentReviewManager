@@ -4,47 +4,140 @@
 @model IEnumerable<StudentReviewManager.PL.VM.School.SchoolVM>
 @{
     ViewData["Title"] = "Schools";
-}
-<h1>Schools</h1>
-@if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-{
-    <p>
-        <a class="btn btn-primary" href="/School/Create">Create New</a>
-    </p>
-}
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                <a href="#" onclick="sortTable(0)">Name</a>
-            </th>
-            <th>Description</th>
-            <th>City</th>
-            <th>
-                <a href="#" onclick="sortTable(3)">Average Rating</a>
-            </th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                <td>@Html.DisplayFor(modelItem => item.Description)</td>
-                <td>@Html.DisplayFor(modelItem => item.CityName)</td>
-                <td>@Html.DisplayFor(modelItem => item.AverageRating)</td>
-                <td>
-                    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-                    {
-                        <a class="btn btn-secondary" href="/School/Edit/@item.Id">Edit</a>
-                        <a class="btn btn-danger" href="/School/Delete/@item.Id">Delete</a>
-                    }
-                    <a class="btn btn-info" href="/School/Details/@item.Id">Details</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
 
-<script src="~/js/NewFolder/Scripts.js"></script>
+    string Truncate(string value, int maxLength)
+    {
+        if (string.IsNullOrEmpty(value)) return value;
+        return value.Length <= maxLength ? value : value.Substring(0, maxLength) + "...";
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .btn {
+            margin-right: 0.5rem;
+        }
+
+        h1 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+            h1 i {
+                margin-right: 0.5rem;
+            }
+
+        .container {
+            margin-top: 2rem;
+        }
+
+        .card {
+            margin-bottom: 1.5rem;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+
+            .card-title i {
+                margin-right: 0.5rem;
+            }
+
+        .card-subtitle {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            color: #6c757d;
+        }
+
+            .card-subtitle i {
+                margin-right: 0.5rem;
+            }
+
+        .card-text {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+            .card-text i {
+                margin-right: 0.5rem;
+                color: #6c757d;
+            }
+
+            .card-text strong {
+                margin-right: 0.5rem;
+            }
+
+        .card-actions {
+            margin-top: 1rem;
+        }
+
+        .truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .fa-school {
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-school"></i> Schools</h1>
+        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+        {
+            <p>
+                <a class="btn btn-primary" href="/School/Create">Create New</a>
+            </p>
+        }
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-chalkboard"></i> @Html.DisplayFor(modelItem => item.Name)</h5>
+                            <h6 class="card-subtitle"><i class="fas fa-city"></i> @Html.DisplayFor(modelItem => item.CityName)</h6>
+                            <p class="card-text truncate" title="@item.Description"><i class="fas fa-info-circle"></i> @Truncate(item.Description, 30)</p>
+                            <p class="card-text"><i class="fas fa-star"></i> <strong> Average Rating:</strong> @Html.DisplayFor(modelItem => item.AverageRating)</p>
+                            <div class="card-actions">
+                                @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                                {
+                                    <a class="btn btn-secondary" href="/School/Edit/@item.Id">Edit</a>
+                                    <a class="btn btn-danger" href="/School/Delete/@item.Id">Delete</a>
+                                }
+                                <a class="btn btn-info" href="/School/Details/@item.Id">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/NewFolder/Scripts.js"></script>
+</body>
+</html>

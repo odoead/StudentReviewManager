@@ -20,11 +20,20 @@ namespace StudentReviewManager.DAL.Data
         {
             if (await userManager.FindByNameAsync("admin@localhost.com") == null)
             {
-                var admin = new E.User { UserName = "admin@localhost.com", Email = "admin@localhost.com", };
+                var admin = new E.User { UserName = "admin@localhost.com", Email = "admin@localhost.com",Nickname="admin" };
                 var result = await userManager.CreateAsync(admin, "1q2w3e4rA!");
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(admin, "Admin");
+                }
+            }
+            if (await userManager.FindByNameAsync("default.user@gmail.com") == null)
+            {
+                var admin = new E.User { UserName = "default.user@gmail.com", Email = "default.user@gmail.com",Nickname="default" };
+                var result = await userManager.CreateAsync(admin, "1q2w3e4rA!QaW");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(admin, "User");
                 }
             }
         }
