@@ -22,7 +22,8 @@ namespace StudentReviewManager.BLL.Services.Realization
         public async Task<IEnumerable<SchoolVM>> SearchSchools(string search)
         {
             var schools = await dbcontext
-                .School.Include(c => c.City)
+                .School.Where(c => c.Name.Contains(search) || c.Description.Contains(search))
+                .Include(c => c.City)
                 .Include(c => c.Reviews)
                 .ThenInclude(rev => rev.User)
                 .Include(c => c.Courses)

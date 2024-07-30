@@ -127,7 +127,7 @@ namespace StudentReviewManager.BLL.Services.Realization
                         DegreeName = course.Degree.Name,
                         AverageRating = await GetAvgRating(course.Id),
                         Id = course.Id,
-                        Description = course.School.Description,
+                        Description = course.Description,
                     }
                 );
             }
@@ -137,9 +137,11 @@ namespace StudentReviewManager.BLL.Services.Realization
                 Description = school.Description,
                 Id = school.Id,
                 Name = school.Name,
-                Reviews = school.Reviews,
+                Reviews = school.Reviews.OrderByDescending(q => q.CreatedAt).ToList(),
                 Courses = coursesVM,
                 AverageRating = await GetAvgRating(school.Id),
+                CityId = school.CityId,
+                CoursesIDs = school.Courses.Select(q=>q.Id).ToList(),
             };
             return schoolVm;
         }
@@ -157,7 +159,7 @@ namespace StudentReviewManager.BLL.Services.Realization
                 ID = school.Id,
                 Name = school.Name,
                 Description = school.Description,
-
+                CityId= school.CityId, CoursesIDs = school.CoursesIDs,
                 Cities = await dbcontext.Cities.ToListAsync(),
                 CoursesAll = await dbcontext.Courses.ToListAsync()
             };

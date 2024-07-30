@@ -7,6 +7,8 @@ namespace StudentReviewManager.PL.VM.Course
         public int ID { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
+        /*public int? BeginSpecialtyId { get; set; }
+        public int? BeginDegreeId { get; set; }*/
         public int? SpecialtyId { get; set; }
         public int? DegreeId { get; set; }
         public List<Degree>? Degrees { get; set; }

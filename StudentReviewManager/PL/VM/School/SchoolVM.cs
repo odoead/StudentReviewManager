@@ -12,5 +12,7 @@ namespace StudentReviewManager.PL.VM.School
         public string Name { get; set; }
         public string CityName { get; set; }
         public double AverageRating { get; set; }
+        public int CityId {  get; set; }
+        public ICollection<int> CoursesIDs { get; set; }
     }
 }
